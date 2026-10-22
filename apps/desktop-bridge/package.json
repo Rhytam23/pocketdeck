@@ -1,0 +1,28 @@
+{
+  "name": "@pocketdeck/desktop-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "bin": { "pocketdeck": "./dist/cli.js" },
+  "scripts": {
+    "build": "esbuild src/cli.ts src/hook.ts --bundle --platform=node --format=esm --target=node20 --external:@napi-rs/keyring --outdir=dist --banner:js=\"import{createRequire}from'module';const require=createRequire(import.meta.url);\"",
+    "typecheck": "tsc -p .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@pocketdeck/protocol": "*",
+    "qrcode": "^1.5.4",
+    "ws": "^8.18.0"
+  },
+  "optionalDependencies": {
+    "@napi-rs/keyring": "^1.1.0"
+  },
+  "devDependencies": {
+    "@pocketdeck/relay": "*",
+    "@types/node": "^22.0.0",
+    "@types/qrcode": "^1.5.5",
+    "@types/ws": "^8.5.0",
+    "esbuild": "^0.24.0"
+  }
+}
