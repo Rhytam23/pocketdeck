@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "PocketDeck",
+    "slug": "pocketdeck",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "ios": {
+      "bundleIdentifier": "dev.pocketdeck.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Scan the pairing QR code shown by your computer.",
+        "NSFaceIDUsageDescription": "Confirm it is you before allowing an agent action."
+      }
+    },
+    "android": { "package": "dev.pocketdeck.app", "permissions": ["CAMERA", "USE_BIOMETRIC"] },
+    "plugins": ["expo-secure-store", "expo-notifications", ["expo-camera", { "cameraPermission": "Scan the pairing QR code shown by your computer." }]]
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@pocketdeck/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start",
+    "typecheck": "tsc -p .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@pocketdeck/protocol": "*",
+    "expo": "~58.0.17",
+    "expo-camera": "~58.0.12",
+    "expo-constants": "~58.0.13",
+    "expo-crypto": "~58.0.7",
+    "expo-device": "~58.0.5",
+    "expo-local-authentication": "~58.0.2",
+    "expo-notifications": "~58.1.6",
+    "expo-secure-store": "~58.0.2",
+    "expo-status-bar": "~58.0.4",
+    "react": "19.3.0",
+    "react-native": "0.88.0",
+    "react-native-safe-area-context": "~5.10.1"
+  },
+  "devDependencies": {
+    "@pocketdeck/relay": "*",
+    "@types/react": "~19.3.0",
+    "@types/ws": "^8.5.0",
+    "ws": "^8.18.0"
+  }
+}
