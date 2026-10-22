@@ -4,6 +4,7 @@
  * any failure (bridge down, bad input, timeout) exits 0 with no output, so Claude Code carries on
  * and, for permission requests, asks in the terminal as usual.
  */
+import { pathToFileURL } from "node:url";
 import { hookReply } from "./adapters/claude.js";
 import { requestIpc } from "./ipc.js";
 import { socketPath } from "./paths.js";
@@ -38,7 +39,7 @@ export async function runHook(stdin: string, path = socketPath()): Promise<strin
   }
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const out = await runHook(await readStdin());
   if (out) process.stdout.write(out);
   process.exit(0);

@@ -1,4 +1,5 @@
 #!/usr/bin/env -S npx tsx
+import { pathToFileURL } from "node:url";
 import { createServer, type Server } from "node:http";
 import { WebSocketServer, type WebSocket } from "ws";
 import { MAX_FRAME_BYTES } from "@pocketdeck/protocol/relay";
@@ -58,7 +59,7 @@ function attach(hub: RoomHub, ws: WebSocket): void {
   ws.on("error", () => hub.closed(state));
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (process.argv[1] !== undefined && import.meta.url === pathToFileURL(process.argv[1]).href) {
   const accessKeys = parseKeys(process.env.RELAY_ACCESS_KEYS);
   const allowOpen = process.env.RELAY_ALLOW_OPEN === "1";
   if (accessKeys.length === 0 && !allowOpen) {
