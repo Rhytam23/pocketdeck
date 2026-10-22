@@ -1,0 +1,23 @@
+{
+  "name": "@pocketdeck/relay",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "bin": { "pocketdeck-relay": "./src/node.ts" },
+  "scripts": {
+    "start": "tsx src/node.ts",
+    "typecheck": "tsc -p . && tsc -p tsconfig.worker.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@pocketdeck/protocol": "*",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250101.0",
+    "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "tsx": "^4.19.0"
+  }
+}
