@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import { mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -52,7 +53,7 @@ async function setup() {
   cleanup.push(() => relay.close());
   const port = (relay.server.address() as { port: number }).port;
   const dir = await mkdtemp(join(tmpdir(), "pd-e2e-"));
-  const socket = join(dir, "bridge.sock");
+  const socket = process.platform === "win32" ? `\\\\.\\pipe\\pd-e2e-${randomBytes(6).toString("hex")}` : join(dir, "bridge.sock");
   const keys = memoryKeyStore();
   const { uri } = await createPairing(dir, keys, { relay: `ws://127.0.0.1:${port}`, accessKey: "gate", name: "test-pc" });
   const resumes: unknown[][] = [];

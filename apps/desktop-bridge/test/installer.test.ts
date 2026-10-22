@@ -41,7 +41,7 @@ describe("install plan and apply", () => {
     expect(backup).toBe(`${path}.pocketdeck-backup-20260102-030405`);
     expect(await readFile(backup!, "utf8")).toBe(JSON.stringify(theirs, null, 2));
     expect(JSON.parse(await readFile(path, "utf8")).hooks.PermissionRequest).toBeDefined();
-    expect((await stat(path)).mode & 0o777).toBe(0o640);
+    if (process.platform !== "win32") expect((await stat(path)).mode & 0o777).toBe(0o640); // POSIX modes do not exist on Windows
     expect((await readdir(dir)).some((f) => f.includes("tmp"))).toBe(false);
     expect((await planInstall(path, cmd)).diff).toBe("");
   });
