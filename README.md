@@ -2,7 +2,7 @@
 
 **One phone app to watch, steer and approve every AI coding agent you run: any agent, any machine, phone first.**
 
-> Status: **early planning.** There is no working code yet. This repo holds the vision, the architecture and the build plan. Contributions and design feedback are welcome.
+> Status: **Stage 1 (Events MVP) implemented, not yet used by real people.** Protocol, relay, desktop bridge (Claude Code) and the Expo phone app exist with automated tests. Anything needing a real phone (camera, biometrics, push delivery) is untested. Peek and Cloud runner are not started. See [Getting started](docs/GETTING_STARTED.md) and [docs/SECURITY.md](docs/SECURITY.md).
 
 ## The problem
 
