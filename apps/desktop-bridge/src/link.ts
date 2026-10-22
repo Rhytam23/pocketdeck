@@ -36,9 +36,13 @@ export class RelayLink {
   private retry = 0;
   private sendLimit = 0n;
   private peerOnline = false;
+  private knownPhone?: Uint8Array;
 
   constructor(private readonly o: LinkOptions) {
-    if (o.keys.phonePublic) this.setChannel(o.keys.phonePublic);
+    if (o.keys.phonePublic) {
+      this.setChannel(o.keys.phonePublic);
+      this.knownPhone = o.keys.phonePublic;
+    }
     if (o.counters && this.channel) {
       const send = BigInt(o.counters.send) + SEND_COUNTER_RESERVE;
       this.channel.restore({ send: send.toString(), recv: o.counters.recv });
@@ -122,12 +126,21 @@ export class RelayLink {
   private onFrame(frame: Uint8Array): void {
     try {
       if (isHandshakeFrame(frame)) {
-        if (!this.o.acceptPairing) return;
         const pub = handshakePublicKey(frame);
         if (!pub) return;
+        if (!this.o.acceptPairing) {
+          // The paired phone may repeat its handshake frame if our welcome never reached it.
+          if (this.channel && this.knownPhone && equal(pub, this.knownPhone)) {
+            const m = this.channel.open(frame);
+            this.persist();
+            this.o.onMessage(m);
+          }
+          return;
+        }
         const trial = new Channel(deriveSessionKeys("pc", this.o.keys.bridge.secretKey, pub, this.o.keys.pairingSecret));
         const m = trial.open(frame);
         this.channel = trial;
+        this.knownPhone = pub;
         this.persist();
         this.o.onPaired(pub);
         this.o.onMessage(m);
@@ -154,3 +167,7 @@ export class RelayLink {
 }
 
 export { toBase64Url, fromBase64Url };
+
+function equal(a: Uint8Array, b: Uint8Array): boolean {
+  return a.length === b.length && a.every((x, i) => x === b[i]);
+}

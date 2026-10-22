@@ -39,8 +39,8 @@ async function phone(uri: string, keypair = generateKeyPair()) {
   cleanup.push(() => ws.close());
   return {
     got,
-    send(m: Message) {
-      ws.send(ch.seal(m, first ? keypair.publicKey : undefined));
+    send(m: Message, repeatHandshake = false) {
+      ws.send(ch.seal(m, first || repeatHandshake ? keypair.publicKey : undefined));
       first = false;
     },
     of<T extends Message["type"]>(t: T) { return got.filter((m): m is Extract<Message, { type: T }> => m.type === t); },
@@ -94,6 +94,15 @@ describe("end to end: hook -> bridge -> relay -> phone", () => {
     ph.send(msg("instruction", { id: "i1", sessionId: "s1", text: "continue" }));
     await until(() => resumes.length === 1);
     expect(resumes[0]).toEqual(["s1", "/w", "continue"]);
+  });
+
+  it("accepts a repeated handshake frame from the already paired phone", async () => {
+    const { uri } = await setup();
+    const ph = await phone(uri);
+    ph.send(msg("hello", { role: "phone", deviceName: "sim" }));
+    await until(() => ph.of("welcome").length === 1);
+    ph.send(msg("hello", { role: "phone", deviceName: "sim" }), true);
+    await until(() => ph.of("welcome").length === 2);
   });
 
   it("persists the pairing and rejects a stranger after restart", async () => {
